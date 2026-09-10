@@ -117,6 +117,7 @@ function renderAddForm(el) {
       '<div class="card"><h2 style="margin-top:0">Thêm câu hỏi lý thuyết</h2>' +
       formRow("Chủ đề *", '<input type="text" id="f-topic" list="dl-topic" placeholder="VD: Java Core, NestJS... (gõ tên mới để tạo chủ đề mới)"><datalist id="dl-topic">' + topicOpts + '</datalist>') +
       formRow("Câu hỏi *", '<textarea id="f-question" placeholder="VD: Sự khác nhau giữa == và equals() trong Java?"></textarea>') +
+      formRow("Trả lời nhanh", '<textarea id="f-summary" placeholder="Tóm tắt 1–3 câu: định nghĩa và ý quan trọng nhất để trả lời trong 30 giây."></textarea>', "Phần này sẽ hiện trước; đáp án chi tiết có thể mở sau.") +
       formRow("Đáp án *", '<textarea id="f-answer" style="min-height:120px" placeholder="Viết đáp án chi tiết..."></textarea>') +
       formRow("Ví dụ code", '<textarea id="f-example" class="code-input" placeholder="(Không bắt buộc) dán code minh họa..."></textarea>') +
       '<button class="btn" id="f-save">💾 Lưu câu hỏi</button></div>';
@@ -165,6 +166,7 @@ function renderAddForm(el) {
         id: newId(),
         topic: v("#f-topic"),
         question: v("#f-question"),
+        summary: v("#f-summary"),
         answer: v("#f-answer"),
         examples: v("#f-example") ? [v("#f-example")] : []
       });

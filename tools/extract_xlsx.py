@@ -125,6 +125,10 @@ def extract_checklist(z, ss):
                 continue
             if get('topic'):
                 topic = get('topic')
+            # Các dòng tổng hợp P1/Audit ở cuối sheet không phải câu checklist.
+            # File gốc đặt số 0 ở cột Question nên cần loại tại bước import.
+            if question.strip() == '0' or topic.strip().lower() in ('p1', 'audit'):
+                continue
             priority = get('priority') or get('severity')
             items.append({
                 'id': no or '%s-%d' % (section, len(items)),

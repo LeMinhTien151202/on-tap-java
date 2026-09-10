@@ -1,7 +1,22 @@
 // Trang Thuật toán: sidebar danh sách (có tìm kiếm) → chi tiết với tab code Java/JS.
-var algoState = { selected: null, lang: "java", keyword: "" };
+var algoState = { selected: null, lang: "java", keyword: "", track: "foundation" };
 
 var DIFF_CLASS = { "Dễ": "easy", "Trung bình": "medium", "Khó": "hard" };
+var ALGO_TRACKS = [
+  { id: "foundation", label: "Nền tảng & pattern" },
+  { id: "interview", label: "Bài phỏng vấn phổ biến" },
+  { id: "leetcode", label: "LeetCode theo chủ đề" },
+  { id: "bigtech", label: "Big Tech nâng cao" },
+  { id: "practical", label: "Bài toán thực tế" }
+];
+
+function algoTrackOf(group) {
+  if (/^Big Tech/.test(group)) return "bigtech";
+  if (/^LeetCode/.test(group)) return "leetcode";
+  if (/^Hay gặp nhất|Mảng & Chuỗi — bài|Linked List & Cây/.test(group)) return "interview";
+  if (/Bài toán thực tế/.test(group)) return "practical";
+  return "foundation";
+}
 
 function algoMatches(it, kw) {
   if (!kw) return true;
@@ -10,11 +25,24 @@ function algoMatches(it, kw) {
 
 function renderAlgo(el) {
   var allAlgo = getAllAlgo();
-  if (algoState.selected === null) algoState.selected = allAlgo[0].items[0].name;
+  var trackGroups = allAlgo.filter(function (g) { return algoTrackOf(g.group) === algoState.track; });
+  var selectedInTrack = trackGroups.some(function (g) {
+    return g.items.some(function (it) { return it.name === algoState.selected; });
+  });
+  if (!selectedInTrack && trackGroups.length) algoState.selected = trackGroups[0].items[0].name;
+
+  var trackButtons = ALGO_TRACKS.map(function (t) {
+    var count = allAlgo.filter(function (g) { return algoTrackOf(g.group) === t.id; })
+      .reduce(function (sum, g) { return sum + g.items.length; }, 0);
+    return '<button class="pill' + (algoState.track === t.id ? " active" : "") +
+      '" data-track="' + t.id + '">' + esc(t.label) + ' <span class="count">(' + count + ')</span></button>';
+  }).join("");
 
   el.innerHTML =
     '<h1>⚙️ Thuật toán phỏng vấn</h1>' +
-    '<p class="subtitle">Các thuật toán, kỹ thuật và bài LeetCode hay bị hỏi — kèm code Java và JavaScript.</p>' +
+    '<p class="subtitle">Học theo nhóm mục tiêu thay vì cuộn qua 29 đầu mục. Mỗi bài vẫn giữ ví dụ, cách làm, bẫy và code Java/JavaScript.</p>' +
+    learningGuideHtml("algorithms", true) +
+    '<div class="pills" id="algo-tracks">' + trackButtons + '</div>' +
     '<div class="algo-layout">' +
     '<div class="algo-nav card">' +
     '<input type="text" class="pill-filter algo-search" id="algo-search" placeholder="🔍 Tìm tên bài, số LeetCode, ý tưởng..." value="' + esc(algoState.keyword) + '">' +
@@ -25,7 +53,7 @@ function renderAlgo(el) {
   function paintNav() {
     var kw = algoState.keyword.trim().toLowerCase();
     var total = 0;
-    var nav = allAlgo.map(function (g) {
+    var nav = trackGroups.map(function (g) {
       var items = g.items.filter(function (it) { return algoMatches(it, kw); });
       if (!items.length) return "";
       total += items.length;
@@ -42,6 +70,14 @@ function renderAlgo(el) {
       '<div class="progress-label" style="padding:2px 0 6px">' + total + ' kết quả</div>');
   }
   paintNav();
+
+  el.querySelector("#algo-tracks").addEventListener("click", function (e) {
+    var btn = e.target.closest(".pill[data-track]");
+    if (!btn) return;
+    algoState.track = btn.dataset.track;
+    algoState.keyword = "";
+    renderAlgo(el);
+  });
 
   var searchEl = el.querySelector("#algo-search");
   searchEl.addEventListener("input", function () {

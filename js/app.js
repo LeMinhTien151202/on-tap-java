@@ -11,6 +11,22 @@ function codeBlock(code) {
     '<pre class="code">' + esc(code) + '</pre></div>';
 }
 
+// Khối định hướng chung: giúp người học biết mục tiêu, thứ tự và cách liên hệ kiến thức.
+function learningGuideHtml(domainId, compact) {
+  var d = findLearningDomain(domainId);
+  var goals = d.goals.map(function (g) { return '<li>' + esc(g) + '</li>'; }).join("");
+  return '<section class="learning-guide' + (compact ? " compact" : "") + '">' +
+    '<div class="learning-guide-head"><span class="learning-guide-icon">' + d.icon + '</span><div>' +
+    '<div class="learning-guide-kicker">Bản đồ học</div><h2>' + esc(d.title) + '</h2></div></div>' +
+    '<p class="learning-guide-summary">' + esc(d.summary) + '</p>' +
+    (compact ? "" : '<div class="learning-guide-grid">' +
+      '<div><strong>Cần nắm</strong><ul>' + goals + '</ul></div>' +
+      '<div><strong>Thứ tự học</strong><p>' + esc(d.sequence) + '</p>' +
+      '<strong>Áp dụng vào PayFlow</strong><p>' + esc(d.payflow) + '</p></div></div>') +
+    '<div class="learning-tip"><strong>💬 Khi phỏng vấn:</strong> ' + esc(d.interview) + '</div>' +
+    '</section>';
+}
+
 function copyText(text, btn) {
   var done = function () {
     btn.textContent = "✓ Đã copy";
@@ -132,12 +148,19 @@ function renderHome(el) {
 
   var wrongBank = getWrongBank();
 
-  var topicList = topics.map(function (t) {
-    var done = t.items.filter(function (it) { return learned[it.id]; }).length;
-    var pct = Math.round(done / t.items.length * 100);
-    return '<div class="history-item home-topic" data-topic="' + esc(t.topic) + '" style="cursor:pointer">' +
-      '<span>' + esc(t.topic) + '</span>' +
-      '<span style="color:var(--muted)">' + done + '/' + t.items.length + ' · ' + pct + '%</span></div>';
+  var domainList = LEARNING_DOMAINS.map(function (d) {
+    var domainTopics = topics.filter(function (t) { return getLearningDomain(t.topic) === d.id; });
+    var total = domainTopics.reduce(function (sum, t) { return sum + t.items.length; }, 0);
+    if (!total) return "";
+    var done = domainTopics.reduce(function (sum, t) {
+      return sum + t.items.filter(function (it) { return learned[it.id]; }).length;
+    }, 0);
+    var pct = Math.round(done / total * 100);
+    return '<button class="home-domain" data-domain="' + esc(d.id) + '">' +
+      '<span class="home-domain-main"><span class="home-domain-icon">' + d.icon + '</span><span><strong>' +
+      esc(d.title) + '</strong><small>' + domainTopics.length + ' chủ đề · ' + total + ' câu</small></span></span>' +
+      '<span class="home-domain-progress"><span>' + done + '/' + total + ' · ' + pct + '%</span>' +
+      '<span class="progress-bar"><span style="width:' + pct + '%"></span></span></span></button>';
   }).join("");
 
   el.innerHTML =
@@ -162,16 +185,18 @@ function renderHome(el) {
     '</div>' +
     '<p class="kbd-hint">Phím tắt: <kbd>g</kbd> rồi <kbd>t</kbd> lý thuyết · <kbd>q</kbd> quiz · <kbd>a</kbd> thuật toán · <kbd>c</kbd> checklist · <kbd>h</kbd> trang chủ</p>' +
     '</div>' +
-    '<h2>Tiến độ lý thuyết theo chủ đề <span style="font-weight:400;font-size:13.5px;color:var(--muted)">(bấm để mở chủ đề)</span></h2>' +
-    '<div class="card">' + topicList + '</div>';
+    '<h2>Lộ trình kiến thức <span style="font-weight:400;font-size:13.5px;color:var(--muted)">(bấm để học theo miền)</span></h2>' +
+    '<div class="domain-list">' + domainList + '</div>';
 
   var wrongBtn = el.querySelector("#home-wrong");
   if (wrongBtn) wrongBtn.addEventListener("click", function () { startWrongReview(); });
 
   el.addEventListener("click", function (e) {
-    var row = e.target.closest(".home-topic");
+    var row = e.target.closest(".home-domain");
     if (!row) return;
-    theoryState.topic = row.dataset.topic;
+    theoryState.domain = row.dataset.domain;
+    var first = topics.find(function (t) { return getLearningDomain(t.topic) === theoryState.domain; });
+    theoryState.topic = first ? first.topic : topics[0].topic;
     theoryState.keyword = "";
     theoryState.filter = "all";
     location.hash = "#/theory";

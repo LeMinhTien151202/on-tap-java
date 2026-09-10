@@ -1,4 +1,6 @@
-// Quét đối chiếu roadmap PayFlow với dữ liệu ôn tập hiện có
+// Quét từ khóa sơ bộ giữa roadmap PayFlow và dữ liệu ôn tập.
+// LƯU Ý: kết quả chỉ chứng minh từ khóa xuất hiện, không chứng minh nội dung đúng hoặc đủ sâu.
+// Ví dụ "reconciliation" của React không đồng nghĩa với đối soát thanh toán.
 global.window = {};
 require('../data/quiz-data.js');
 require('../data/theory-extra.js');

@@ -1,10 +1,10 @@
 // Trang Quiz trắc nghiệm: chọn chủ đề + số câu → làm bài → chấm điểm + lưu lịch sử.
 var quizState = null; // null = màn hình chọn; object = đang làm bài
-var quizSetup = { topic: "Tất cả", count: 10, filter: "", mode: "random" };
+var quizSetup = { domain: "java-language", topic: "Tất cả", count: 10, filter: "", mode: "random" };
 
-function quizTopics() {
+function quizTopics(pool) {
   var topics = [];
-  getAllQuiz().forEach(function (q) {
+  (pool || getAllQuiz()).forEach(function (q) {
     if (topics.indexOf(q.topic) === -1) topics.push(q.topic);
   });
   return topics;
@@ -87,6 +87,7 @@ function renderQuiz(el) {
 
 function renderQuizSetup(el) {
   var allQuiz = getAllQuiz();
+  var domainQuiz = allQuiz.filter(function (q) { return getLearningDomain(q.topic) === quizSetup.domain; });
   var bank = getWrongBank();
   var wrongCount = allQuiz.filter(function (q) { return bank.indexOf(q.question) !== -1; }).length;
 
@@ -108,9 +109,19 @@ function renderQuizSetup(el) {
       }).join("") + '</div>'
     : "";
 
+  var domainButtons = LEARNING_DOMAINS.map(function (d) {
+    var count = allQuiz.filter(function (q) { return getLearningDomain(q.topic) === d.id; }).length;
+    if (!count) return "";
+    return '<button class="domain-btn' + (d.id === quizSetup.domain ? " active" : "") +
+      '" data-domain="' + esc(d.id) + '"><span>' + d.icon + '</span><strong>' +
+      esc(d.title) + '</strong><small>' + count + ' câu</small></button>';
+  }).join("");
+
   el.innerHTML =
     '<h1>📝 Quiz trắc nghiệm</h1>' +
-    '<p class="subtitle">Chọn chủ đề và số câu — câu hỏi và thứ tự đáp án đều được xáo trộn mỗi lượt.</p>' +
+    '<p class="subtitle">Chọn miền, chủ đề và số câu. Sau mỗi lựa chọn, hệ thống nêu thẳng đáp án đúng rồi giải thích cơ chế để bạn không chỉ học thuộc.</p>' +
+    '<div class="learning-domains" id="quiz-domains">' + domainButtons + '</div>' +
+    learningGuideHtml(quizSetup.domain, true) +
     (wrongCount
       ? '<div class="card" style="border-color:var(--red)"><div class="toolbar" style="margin-bottom:0">' +
         '<div><strong>🔁 Sổ tay câu từng sai: ' + wrongCount + ' câu</strong>' +
@@ -132,12 +143,12 @@ function renderQuizSetup(el) {
 
   function paintTopics() {
     var kw = quizSetup.filter.trim().toLowerCase();
-    var list = ["Tất cả"].concat(quizTopics()).filter(function (t) {
+    var list = ["Tất cả"].concat(quizTopics(domainQuiz)).filter(function (t) {
       return t === "Tất cả" || !kw || t.toLowerCase().indexOf(kw) !== -1;
     });
     el.querySelector("#quiz-topics").innerHTML = list.map(function (t) {
-      var count = t === "Tất cả" ? allQuiz.length
-        : allQuiz.filter(function (q) { return q.topic === t; }).length;
+      var count = t === "Tất cả" ? domainQuiz.length
+        : domainQuiz.filter(function (q) { return q.topic === t; }).length;
       return '<button class="pill' + (t === quizSetup.topic ? " active" : "") + '" data-topic="' + esc(t) + '">'
         + esc(t) + ' <span class="count">(' + count + ')</span></button>';
     }).join("") || '<span class="empty" style="padding:8px 0">Không có chủ đề nào khớp.</span>';
@@ -145,8 +156,8 @@ function renderQuizSetup(el) {
   }
 
   function poolSize() {
-    return quizSetup.topic === "Tất cả" ? allQuiz.length
-      : allQuiz.filter(function (q) { return q.topic === quizSetup.topic; }).length;
+    return quizSetup.topic === "Tất cả" ? domainQuiz.length
+      : domainQuiz.filter(function (q) { return q.topic === quizSetup.topic; }).length;
   }
   function paintInfo() {
     var n = Math.min(poolSize(), quizSetup.count);
@@ -155,6 +166,15 @@ function renderQuizSetup(el) {
   }
 
   paintTopics();
+
+  el.querySelector("#quiz-domains").addEventListener("click", function (e) {
+    var btn = e.target.closest(".domain-btn");
+    if (!btn) return;
+    quizSetup.domain = btn.dataset.domain;
+    quizSetup.topic = "Tất cả";
+    quizSetup.filter = "";
+    renderQuiz(el);
+  });
 
   var filterEl = el.querySelector("#quiz-topic-filter");
   filterEl.addEventListener("input", function () {
@@ -188,8 +208,8 @@ function renderQuizSetup(el) {
   });
 
   el.querySelector("#quiz-start").addEventListener("click", function () {
-    var pool = quizSetup.topic === "Tất cả" ? allQuiz
-      : allQuiz.filter(function (q) { return q.topic === quizSetup.topic; });
+    var pool = quizSetup.topic === "Tất cả" ? domainQuiz
+      : domainQuiz.filter(function (q) { return q.topic === quizSetup.topic; });
     if (!pool.length) return alert("Chủ đề này chưa có câu hỏi nào.");
     startQuiz(quizSetup.topic, pool, quizSetup.count);
     renderQuiz(el);
@@ -269,7 +289,9 @@ function answerQuiz(el, chosen) {
 
   var last = quizState.index === quizState.questions.length - 1;
   el.querySelector("#quiz-feedback").innerHTML =
-    '<div class="explain">' + (chosen === q.correct ? "✅ Chính xác! " : "❌ Chưa đúng. ") + '💡 ' + esc(q.explain) + '</div>' +
+    '<div class="explain"><div class="explain-status">' + (chosen === q.correct ? "✅ Chính xác!" : "❌ Chưa đúng.") + '</div>' +
+    '<div class="explain-answer"><strong>Đáp án đúng:</strong> ' + esc(q.options[q.correct]) + '</div>' +
+    '<div class="explain-reason"><strong>Vì sao:</strong> ' + esc(q.explain) + '</div></div>' +
     '<button class="btn" id="quiz-next">' + (last ? "Xem kết quả 🏁" : "Câu tiếp theo →") + '</button>';
   el.querySelector("#quiz-next").addEventListener("click", function () { nextQuiz(el); });
   el.querySelector("#quiz-next").focus();

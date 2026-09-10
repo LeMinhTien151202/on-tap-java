@@ -1,5 +1,5 @@
 // Trang Lý thuyết Q&A: chọn chủ đề + tìm kiếm + accordion câu hỏi + đánh dấu đã thuộc.
-var theoryState = { topic: null, keyword: "", filter: "all", pillFilter: "" };
+var theoryState = { domain: "java-language", topic: null, keyword: "", filter: "all", pillFilter: "" };
 
 function getLearned() {
   try { return JSON.parse(localStorage.getItem("ontap.learned")) || {}; }
@@ -20,6 +20,7 @@ function getTheoryTopics() {
         id: "extra-" + extra.topic + "-" + i,
         question: it.question,
         answer: it.answer,
+        summary: it.summary || "",
         examples: it.examples || [],
         source: "extra"
       };
@@ -30,7 +31,7 @@ function getTheoryTopics() {
   // Câu hỏi người dùng tự thêm (trang ➕ Thêm nội dung, lưu localStorage)
   getCustomContent().theory.forEach(function (it) {
     var found = topics.find(function (t) { return t.topic === it.topic; });
-    var item = { id: it.id, question: it.question, answer: it.answer, examples: it.examples || [], source: "custom" };
+    var item = { id: it.id, question: it.question, answer: it.answer, summary: it.summary || "", examples: it.examples || [], source: "custom" };
     if (found) found.items.push(item);
     else topics.push({ topic: it.topic, items: [item] });
   });
@@ -40,14 +41,32 @@ function getTheoryTopics() {
 
 function renderTheory(el) {
   var topics = getTheoryTopics();
-  if (theoryState.topic === null) theoryState.topic = topics[0].topic;
+  var domainTopics = topics.filter(function (t) { return getLearningDomain(t.topic) === theoryState.domain; });
+  if (!domainTopics.length) {
+    theoryState.domain = getLearningDomain(topics[0].topic);
+    domainTopics = topics.filter(function (t) { return getLearningDomain(t.topic) === theoryState.domain; });
+  }
+  if (theoryState.topic === null || !domainTopics.some(function (t) { return t.topic === theoryState.topic; })) {
+    theoryState.topic = domainTopics[0].topic;
+  }
+
+  var domainButtons = LEARNING_DOMAINS.map(function (d) {
+    var count = topics.filter(function (t) { return getLearningDomain(t.topic) === d.id; })
+      .reduce(function (sum, t) { return sum + t.items.length; }, 0);
+    if (!count) return "";
+    return '<button class="domain-btn' + (d.id === theoryState.domain ? " active" : "") +
+      '" data-domain="' + esc(d.id) + '"><span>' + d.icon + '</span><strong>' +
+      esc(d.title) + '</strong><small>' + count + ' câu</small></button>';
+  }).join("");
 
   el.innerHTML =
     '<h1>📖 Lý thuyết Q&amp;A</h1>' +
-    '<p class="subtitle">Bấm vào câu hỏi để xem đáp án. Đánh dấu <strong>✓ đã thuộc</strong> rồi lọc "Chưa thuộc" để ôn đúng chỗ hổng.</p>' +
+    '<p class="subtitle">Chọn một miền kiến thức rồi học từng chủ đề. Mỗi phần có định hướng, câu trả lời nhanh và giải thích sâu để dễ nhớ hơn.</p>' +
+    '<div class="learning-domains" id="theory-domains">' + domainButtons + '</div>' +
+    learningGuideHtml(theoryState.domain, false) +
     '<input type="text" class="search-box" id="theory-search" placeholder="🔍 Tìm nội dung trong mọi chủ đề (gõ để tìm toàn kho)..." value="' + esc(theoryState.keyword) + '">' +
     '<div class="toolbar">' +
-    '<strong style="font-size:14px">Chủ đề (' + topics.length + ')</strong><span style="flex:1"></span>' +
+    '<strong style="font-size:14px">Chủ đề trong miền (' + domainTopics.length + ')</strong><span style="flex:1"></span>' +
     '<input type="text" class="pill-filter" id="theory-pill-filter" placeholder="🔍 Lọc nhanh tên chủ đề..." value="' + esc(theoryState.pillFilter) + '">' +
     '</div>' +
     '<div class="pills pills-scroll" id="theory-pills"></div>' +
@@ -67,7 +86,10 @@ function renderTheory(el) {
   function paintPills() {
     var learned = getLearned();
     var kw = theoryState.pillFilter.trim().toLowerCase();
-    var list = topics.filter(function (t) { return !kw || t.topic.toLowerCase().indexOf(kw) !== -1; });
+    var list = topics.filter(function (t) {
+      return getLearningDomain(t.topic) === theoryState.domain &&
+        (!kw || t.topic.toLowerCase().indexOf(kw) !== -1);
+    });
     el.querySelector("#theory-pills").innerHTML = list.map(function (t) {
       var done = t.items.filter(function (it) { return learned[it.id]; }).length;
       var all = done === t.items.length && t.items.length > 0;
@@ -76,6 +98,17 @@ function renderTheory(el) {
     }).join("") || '<span class="empty" style="padding:8px 0">Không có chủ đề nào khớp.</span>';
   }
   paintPills();
+
+  el.querySelector("#theory-domains").addEventListener("click", function (e) {
+    var btn = e.target.closest(".domain-btn");
+    if (!btn) return;
+    theoryState.domain = btn.dataset.domain;
+    var first = topics.find(function (t) { return getLearningDomain(t.topic) === theoryState.domain; });
+    theoryState.topic = first ? first.topic : topics[0].topic;
+    theoryState.keyword = "";
+    theoryState.pillFilter = "";
+    renderTheory(el);
+  });
 
   var pillFilterEl = el.querySelector("#theory-pill-filter");
   pillFilterEl.addEventListener("input", function () {
@@ -183,10 +216,32 @@ function renderTheoryList(el) {
     if (isLearned) badges += ' <span class="badge done">✓ thuộc</span>';
     var examples = (it.examples || []).map(function (ex) { return codeBlock(ex); }).join("");
     return '<details class="qa' + (isLearned ? " learned" : "") + '" data-id="' + esc(it.id) + '"><summary>' + esc(it.question) + badges + '</summary>' +
-      '<div class="qa-body"><div class="answer">' + esc(it.answer || "(Chưa có đáp án trong file Excel — tự ôn nhé!)") + '</div>' +
+      '<div class="qa-body">' + theoryAnswerHtml(it) +
       examples +
       '<div class="qa-actions"><button class="btn secondary sm learn-btn" data-id="' + esc(it.id) + '">' +
       (isLearned ? "↺ Bỏ đánh dấu đã thuộc" : "✓ Đã thuộc câu này") + '</button></div>' +
       '</div></details>';
   }).join("");
+}
+
+function theoryAnswerHtml(it) {
+  var answer = it.answer || "(Chưa có đáp án trong file Excel — tự ôn nhé!)";
+  var summary = it.summary || "";
+  var isLong = answer.length > 900;
+
+  if (!summary && isLong) {
+    var plain = answer.replace(/\s+/g, " ").trim();
+    var cut = plain.slice(0, 280);
+    var lastSpace = cut.lastIndexOf(" ");
+    summary = cut.slice(0, lastSpace > 180 ? lastSpace : cut.length) + (plain.length > cut.length ? "…" : "");
+  }
+
+  if (!summary) return '<div class="answer">' + esc(answer) + '</div>';
+
+  var quick = '<div class="answer-quick"><strong>Trả lời nhanh</strong><p>' + esc(summary) + '</p></div>';
+  if (isLong) {
+    return quick + '<details class="deep-answer"><summary>Xem giải thích đầy đủ</summary>' +
+      '<div class="answer">' + esc(answer) + '</div></details>';
+  }
+  return quick + '<div class="answer answer-detail">' + esc(answer) + '</div>';
 }

@@ -941,48 +941,6 @@ window.CHECKLIST_DATA = [
     "type": "Theory",
     "question": "76",
     "priority": ""
-   },
-   {
-    "id": "SQL-134",
-    "topic": "P1",
-    "type": "Total",
-    "question": "0",
-    "priority": ""
-   },
-   {
-    "id": "SQL-135",
-    "topic": "P1",
-    "type": "Practice",
-    "question": "0",
-    "priority": "Rank"
-   },
-   {
-    "id": "SQL-136",
-    "topic": "P1",
-    "type": "Theory",
-    "question": "0",
-    "priority": "0.01"
-   },
-   {
-    "id": "SQL-137",
-    "topic": "Audit",
-    "type": "Total",
-    "question": "0",
-    "priority": "0.6"
-   },
-   {
-    "id": "SQL-138",
-    "topic": "Audit",
-    "type": "Practice",
-    "question": "0",
-    "priority": "0.75"
-   },
-   {
-    "id": "SQL-139",
-    "topic": "Audit",
-    "type": "Theory",
-    "question": "0",
-    "priority": "0.9"
    }
   ]
  },
@@ -1991,13 +1949,6 @@ window.CHECKLIST_DATA = [
     "priority": ""
    },
    {
-    "id": "JI144",
-    "topic": "Thread",
-    "type": "Theory",
-    "question": "Nắm được sự khác nhau giữa wait() và sleep()?",
-    "priority": ""
-   },
-   {
     "id": "JI145",
     "topic": "Java8",
     "type": "Practice",
@@ -2024,48 +1975,6 @@ window.CHECKLIST_DATA = [
     "type": "Theory",
     "question": "91",
     "priority": ""
-   },
-   {
-    "id": "Java-148",
-    "topic": "P1",
-    "type": "Total",
-    "question": "0",
-    "priority": ""
-   },
-   {
-    "id": "Java-149",
-    "topic": "P1",
-    "type": "Practice",
-    "question": "0",
-    "priority": "Rank"
-   },
-   {
-    "id": "Java-150",
-    "topic": "P1",
-    "type": "Theory",
-    "question": "0",
-    "priority": "0.01"
-   },
-   {
-    "id": "Java-151",
-    "topic": "Audit",
-    "type": "Total",
-    "question": "0",
-    "priority": "0.6"
-   },
-   {
-    "id": "Java-152",
-    "topic": "Audit",
-    "type": "Practice",
-    "question": "0",
-    "priority": "0.75"
-   },
-   {
-    "id": "Java-153",
-    "topic": "Audit",
-    "type": "Theory",
-    "question": "0",
-    "priority": "0.9"
    }
   ]
  }

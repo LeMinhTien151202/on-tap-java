@@ -61,7 +61,8 @@ function renderChecklist(el) {
 
   el.innerHTML =
     '<h1>✅ Checklist ôn tập</h1>' +
-    '<p class="subtitle">Checklist tự đánh giá từ file Excel — tick những mục bạn đã nắm vững. Tiến độ được lưu tự động trên trình duyệt.</p>' +
+    '<p class="subtitle">Chỉ tick khi bạn có thể tự giải thích khái niệm, nêu ví dụ và trả lời ít nhất một câu hỏi đào sâu — không tick chỉ vì đã đọc qua.</p>' +
+    learningGuideHtml(current.section === "SQL" ? "data" : "java-language", true) +
     '<div class="pills" id="cl-tabs">' + tabs + '</div>' +
     '<div class="card"><strong>' + esc(current.section) + ':</strong> ' + overall.done + '/' + overall.total + ' câu (' + overall.pct + '%)' +
     '<div class="progress-bar"><div style="width:' + overall.pct + '%"></div></div></div>' +
