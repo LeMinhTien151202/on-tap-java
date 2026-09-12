@@ -3,6 +3,7 @@ global.window = {};
 require('../data/algo-data.js');
 require('../data/algo-interview-extra.js');
 require('../data/algo-business-math.js');
+require('../data/algo-basic-docx-extra.js');
 const groups = window.ALGO_DATA;
 
 const miss = { java: [], js: [], diff: [], steps: [], trap: [], alt: [] };

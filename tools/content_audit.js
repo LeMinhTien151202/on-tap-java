@@ -8,6 +8,7 @@ require('../data/quiz-data.js');
 require('../data/algo-data.js');
 require('../data/algo-interview-extra.js');
 require('../data/algo-business-math.js');
+require('../data/algo-basic-docx-extra.js');
 require('../data/exam-online-data.js');
 require('../data/payflow-project-data.js');
 require('../data/business-handbook-project-data.js');
