@@ -67,11 +67,27 @@ window.LEARNING_DOMAINS = [
   },
   {
     id: "payflow", icon: "💳", title: "PayFlow & Payment",
-    summary: "Áp dụng Java và distributed systems vào một luồng tiền có trạng thái, đối soát và khả năng phục hồi.",
-    goals: ["Reserve, capture, release, refund và state machine", "Double-entry ledger, settlement và reconciliation", "Idempotency, Saga, Outbox/Inbox, provider callback và risk policy"],
-    sequence: "Payment lifecycle → balance/reservation → ledger → async workflow → provider → settlement/reconciliation",
+    summary: "Đọc PayFlow như một hệ thống thật: hiểu trách nhiệm từng service, luồng tiền, consistency, recovery và bằng chứng vận hành.",
+    goals: ["Nắm Gateway, Payment, Account, Ledger, Risk, Merchant, Notification, Reporting và Settlement", "Giải thích idempotency, Saga, Outbox/Inbox, locking, double-entry và contract versioning", "Kể được happy path, failure path, deploy, test evidence và giới hạn hiện tại"],
+    sequence: "CV pitch → service map → payment/refund flow → reliability & security → settlement/reconciliation → test, deploy & incident",
     payflow: "Đây là miền tổng hợp: mọi quyết định phải bảo vệ tiền, không xử lý trùng và để lại dấu vết kiểm toán.",
-    interview: "Hãy kể được happy path, duplicate path và failure/compensation path của cùng một payment."
+    interview: "Mỗi câu trả lời nên có: service owner → transaction/event → invariant → failure window → test/evidence → giới hạn."
+  },
+  {
+    id: "business-handbook", icon: "📒", title: "Sổ Tay Kinh Doanh",
+    summary: "Ôn dự án full-stack quản lý hộ kinh doanh: phễu SEO, sổ thu chi, tax engine, nhắc hạn và thanh toán subscription qua VietQR/SePay.",
+    goals: ["Kể được ba luồng public tool, quản lý kinh doanh và nâng cấp gói", "Giải thích ownership, tax versioning, ledger cursor và transaction", "Làm chủ checkout, webhook, settlement, race condition, deploy và incident"],
+    sequence: "CV pitch → luồng sản phẩm → auth/data/tax → checkout & webhook → testing, deploy & incident",
+    payflow: "Payment trong dự án là một module chuyển khoản kích hoạt entitlement, không phải nền tảng microservice/ledger kép như PayFlow.",
+    interview: "Mỗi câu trả lời nên phân biệt code đã có, evidence đã chạy, tích hợp chưa xác minh và phần còn là mock/kế hoạch."
+  },
+  {
+    id: "exam-online", icon: "🎓", title: "Java Exam Online",
+    summary: "Ôn đúng dự án Aptismate: từ cách giới thiệu trên CV đến Spring Boot, chấm thi bất đồng bộ, bảo mật và production.",
+    goals: ["Kể được kiến trúc và quyết định kỹ thuật bằng code thật", "Giải thích async grading, idempotency, RBAC và bảo vệ đáp án", "Nắm Docker, CI/CD, Flyway, quan sát và xử lý sự cố"],
+    sequence: "Pitch dự án → kiến trúc → dữ liệu/security → async & AI → testing → deploy & incident",
+    payflow: "Miền này độc lập với PayFlow và bám trực tiếp hai repository react-exam-online, java-exam-online.",
+    interview: "Mỗi câu trả lời theo khung: bài toán → lựa chọn → code/luồng thật → trade-off → cách mở rộng."
   },
   {
     id: "algorithms", icon: "🧩", title: "Thuật toán & CTDL",
@@ -102,6 +118,8 @@ window.LEARNING_DOMAINS = [
 window.getLearningDomain = function (topic) {
   var t = String(topic || "").toLowerCase();
   var rules = [
+    ["exam-online", /exam online|aptismate/],
+    ["business-handbook", /sổ tay kinh doanh|so tay kinh doanh|so-tay-kinh-doanh/],
     ["payflow", /payflow|payment domain|ledger|settlement|reconciliation|refund workflow|vnpay|webhook|callback|ipn|idempotency & inbox|notification service|state machine.*risk/],
     ["algorithms", /thuật toán|leetcode|data structure|ctdl/],
     ["other-stacks", /javascript|angular|react(js)?\b|node\.js|nestjs|express|tối ưu fe|công cụ fe|c#|frontend/],

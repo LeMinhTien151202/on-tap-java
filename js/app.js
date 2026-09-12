@@ -58,6 +58,7 @@ document.addEventListener("click", function (e) {
 var routes = {
   home: renderHome,
   theory: renderTheory,
+  notes: renderNotes,
   quiz: renderQuiz,
   checklist: renderChecklist,
   algo: renderAlgo,
@@ -66,12 +67,13 @@ var routes = {
 };
 
 function currentRoute() {
-  var hash = location.hash.replace(/^#\//, "");
+  var hash = location.hash.replace(/^#\//, "").split("?")[0];
   return routes[hash] ? hash : "home";
 }
 
 function render() {
   var route = currentRoute();
+  document.body.classList.toggle("notes-view", route === "notes");
   document.querySelectorAll(".sidebar a[data-route]").forEach(function (a) {
     a.classList.toggle("active", a.dataset.route === route);
   });
@@ -112,14 +114,14 @@ window.addEventListener("scroll", function () {
   toTop.classList.toggle("show", window.scrollY > 400);
 });
 
-/* ===== Phím tắt điều hướng: g + phím (gt/gq/ga/gc/gh) ===== */
+/* ===== Phím tắt điều hướng: g + phím ===== */
 var _gPending = false;
 document.addEventListener("keydown", function (e) {
   var tag = (e.target.tagName || "").toLowerCase();
   if (tag === "input" || tag === "textarea" || tag === "select" || e.ctrlKey || e.altKey || e.metaKey) return;
   if (e.key === "Escape") { document.body.classList.remove("nav-open"); return; }
   if (_gPending) {
-    var map = { h: "home", t: "theory", q: "quiz", c: "checklist", a: "algo", r: "code", n: "add" };
+    var map = { h: "home", t: "theory", i: "notes", q: "quiz", c: "checklist", a: "algo", r: "code", n: "add" };
     if (map[e.key]) location.hash = "#/" + map[e.key];
     _gPending = false;
     return;
@@ -178,12 +180,13 @@ function renderHome(el) {
     '<p style="margin-bottom:12px;font-size:14.5px;line-height:1.6">Gợi ý lộ trình: đọc <strong>Lý thuyết Q&amp;A</strong> theo từng chủ đề → tick <strong>Checklist</strong> những phần đã vững → làm <strong>Quiz</strong> kiểm tra → ôn <strong>Thuật toán</strong> trước ngày phỏng vấn.</p>' +
     '<div class="toolbar" style="margin-bottom:0">' +
     '<a class="btn" href="#/theory">📖 Ôn lý thuyết</a>' +
+    '<a class="btn secondary" href="#/notes">🗂️ Đọc tài liệu ảnh</a>' +
     '<a class="btn" href="#/quiz" style="background:var(--green)">📝 Làm quiz ngay</a>' +
     (wrongBank.length ? '<button class="btn" id="home-wrong" style="background:var(--red)">🔁 Ôn ' + wrongBank.length + ' câu từng sai</button>' : "") +
     '<a class="btn" href="#/algo" style="background:#0891b2">⚙️ Luyện thuật toán</a>' +
     '<a class="btn" href="#/code" style="background:#7c3aed">💻 Chạy thử code</a>' +
     '</div>' +
-    '<p class="kbd-hint">Phím tắt: <kbd>g</kbd> rồi <kbd>t</kbd> lý thuyết · <kbd>q</kbd> quiz · <kbd>a</kbd> thuật toán · <kbd>c</kbd> checklist · <kbd>h</kbd> trang chủ</p>' +
+    '<p class="kbd-hint">Phím tắt: <kbd>g</kbd> rồi <kbd>t</kbd> lý thuyết, <kbd>i</kbd> tài liệu ảnh, <kbd>q</kbd> quiz, <kbd>a</kbd> thuật toán, <kbd>c</kbd> checklist, <kbd>h</kbd> trang chủ</p>' +
     '</div>' +
     '<h2>Lộ trình kiến thức <span style="font-weight:400;font-size:13.5px;color:var(--muted)">(bấm để học theo miền)</span></h2>' +
     '<div class="domain-list">' + domainList + '</div>';

@@ -1,6 +1,8 @@
 // Rà soát dữ liệu thuật toán: thiếu java/js/diff/trap/alt, và java "giả" (thực chất là JS).
 global.window = {};
 require('../data/algo-data.js');
+require('../data/algo-interview-extra.js');
+require('../data/algo-business-math.js');
 const groups = window.ALGO_DATA;
 
 const miss = { java: [], js: [], diff: [], steps: [], trap: [], alt: [] };

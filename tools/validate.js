@@ -2,6 +2,10 @@
 global.window = {};
 require('../data/quiz-data.js');
 require('../data/theory-extra.js');
+require('../data/checklist-data.js');
+require('../data/exam-online-data.js');
+require('../data/payflow-project-data.js');
+require('../data/business-handbook-project-data.js');
 
 const q = window.QUIZ_DATA, t = window.THEORY_EXTRA;
 

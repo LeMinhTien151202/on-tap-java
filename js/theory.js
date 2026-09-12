@@ -13,11 +13,18 @@ function getTheoryTopics() {
   var topics = THEORY_DATA.map(function (t) {
     return { topic: t.topic, items: t.items.slice() };
   });
+  // Một topic có thể được bổ sung qua nhiều block. Giữ ID cũ cho block đầu để
+  // không làm mất tiến độ localStorage, thêm hậu tố cho các block sau để tránh
+  // hai câu khác nhau dùng chung trạng thái "đã thuộc".
+  var extraTopicBlocks = {};
   (window.THEORY_EXTRA || []).forEach(function (extra) {
+    var blockIndex = extraTopicBlocks[extra.topic] || 0;
+    extraTopicBlocks[extra.topic] = blockIndex + 1;
+    var blockSuffix = blockIndex ? "-block-" + (blockIndex + 1) : "";
     var found = topics.find(function (t) { return t.topic === extra.topic; });
     var items = extra.items.map(function (it, i) {
       return {
-        id: "extra-" + extra.topic + "-" + i,
+        id: "extra-" + extra.topic + blockSuffix + "-" + i,
         question: it.question,
         answer: it.answer,
         summary: it.summary || "",

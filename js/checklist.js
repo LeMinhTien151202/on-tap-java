@@ -62,7 +62,7 @@ function renderChecklist(el) {
   el.innerHTML =
     '<h1>✅ Checklist ôn tập</h1>' +
     '<p class="subtitle">Chỉ tick khi bạn có thể tự giải thích khái niệm, nêu ví dụ và trả lời ít nhất một câu hỏi đào sâu — không tick chỉ vì đã đọc qua.</p>' +
-    learningGuideHtml(current.section === "SQL" ? "data" : "java-language", true) +
+    learningGuideHtml(current.section === "SQL" ? "data" : current.section === "Java Exam Online" ? "exam-online" : current.section === "PayFlow Project" ? "payflow" : current.section === "Sổ Tay Kinh Doanh" ? "business-handbook" : "java-language", true) +
     '<div class="pills" id="cl-tabs">' + tabs + '</div>' +
     '<div class="card"><strong>' + esc(current.section) + ':</strong> ' + overall.done + '/' + overall.total + ' câu (' + overall.pct + '%)' +
     '<div class="progress-bar"><div style="width:' + overall.pct + '%"></div></div></div>' +

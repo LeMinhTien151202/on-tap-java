@@ -205,6 +205,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Coin Change (đổi tiền — ít đồng xu nhất)",
+    lc: "322", slug: "coin-change", tags: "dp unbounded-knapsack shortest-path",
     examples: [{"input":"coins = [1, 2, 5], amount = 11","output":"3","note":"5 + 5 + 1 = 11 dùng 3 đồng. Greedy 'cứ lấy đồng lớn nhất' tình cờ đúng ở đây nhưng không phải lúc nào cũng đúng."},{"input":"coins = [2], amount = 3","output":"-1","note":"Không tổ hợp nào tạo ra 3 nên trả -1. Ô dp còn giá trị 'vô cực' chính là dấu hiệu không đổi được — đừng nhầm với 0."}],
     diff: "Trung bình",
     trap: "Greedy chọn đồng lớn nhất trước là SAI với bộ tiền không chuẩn: với {1, 3, 4} đổi 6, greedy cho 4+1+1 = 3 đồng, đáp án đúng là 3+3 = 2 đồng.",
@@ -217,6 +218,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Climbing Stairs (leo cầu thang)",
+    lc: "70", slug: "climbing-stairs", tags: "dp fibonacci",
     examples: [{"input":"n = 3","output":"3","note":"Ba cách: 1+1+1, 1+2, 2+1. Đúng bằng Fibonacci thứ 4 — nhận ra điều này là giải xong bài."},{"input":"n = 5","output":"8","note":"Dãy 1,2,3,5,8. Công thức dp[i] = dp[i-1] + dp[i-2] vì bước cuối chỉ có thể là 1 bậc hoặc 2 bậc."}],
     diff: "Dễ",
     trap: "Chính là dãy Fibonacci trá hình. Nếu đề cho bước nhảy {1, 2, 3} thì công thức thành dp[i] = dp[i-1] + dp[i-2] + dp[i-3] (dãy Tribonacci).",
@@ -229,6 +231,7 @@ window.ALGO_DATA = [
    },
    {
     name: "House Robber (trộm nhà không kề nhau)",
+    lc: "198", slug: "house-robber", tags: "dp choose-skip",
     examples: [{"input":"nums = [1, 2, 3, 1]","output":"4","note":"Trộm nhà 0 và nhà 2 được 1 + 3 = 4. Chọn nhà 1 và nhà 3 chỉ được 3."},{"input":"nums = [2, 7, 9, 3, 1]","output":"12","note":"2 + 9 + 1 = 12 lớn hơn 7 + 3 = 10. Greedy 'lấy nhà giá cao nhất trước' sẽ chọn 9 rồi 7 bị chặn và ra 10 — sai."}],
     diff: "Trung bình",
     trap: "Biến thể LC 213 xếp nhà thành VÒNG TRÒN: nhà đầu và nhà cuối kề nhau nên phải chạy 2 lần — một lần bỏ nhà đầu, một lần bỏ nhà cuối, rồi lấy max.",
@@ -270,8 +273,9 @@ window.ALGO_DATA = [
   items: [
    {
     name: "Kadane — Maximum Subarray (tổng đoạn con lớn nhất)",
+    lc: "53", slug: "maximum-subarray", tags: "array dp kadane",
     examples: [{"input":"nums = [-2,1,-3,4,-1,2,1,-5,4]","output":"6","note":"Đoạn [4,-1,2,1] cho tổng 6. Nguyên tắc: nếu tổng đang chạy âm thì vứt bỏ, bắt đầu lại từ phần tử hiện tại."},{"input":"nums = [-3, -1, -2]","output":"-1","note":"Toàn số âm thì đáp án là phần tử lớn nhất. Khởi tạo max = 0 sẽ ra 0 và SAI — phải khởi tạo bằng nums[0]."}],
-    diff: "Dễ",
+    diff: "Trung bình",
     trap: "Khởi tạo best = nums[0], KHÔNG phải 0 — nếu khởi tạo 0 thì mảng toàn số âm sẽ trả về 0 thay vì phần tử lớn nhất.",
     alt: {"title":"Cách khác — chia để trị & truy vết đoạn","complexity":"O(n log n) cho chia để trị; bản truy vết vẫn O(n)","note":"Chia để trị chậm hơn nhưng là câu hỏi vặn hay gặp. Thực tế hay được hỏi thêm: 'trả về CHÍNH ĐOẠN đó, không chỉ tổng' — chỉ cần lưu thêm chỉ số bắt đầu.","java":"int[] maxSubArrayRange(int[] nums) {\n    int cur = nums[0], best = nums[0];\n    int curStart = 0, bestStart = 0, bestEnd = 0;\n\n    for (int i = 1; i < nums.length; i++) {\n        if (cur + nums[i] < nums[i]) {   // bắt đầu đoạn mới\n            cur = nums[i];\n            curStart = i;\n        } else {\n            cur += nums[i];\n        }\n        if (cur > best) { best = cur; bestStart = curStart; bestEnd = i; }\n    }\n    return new int[] { best, bestStart, bestEnd };\n}"},
     complexity: "Thời gian: O(n) · Bộ nhớ: O(1)",
@@ -282,6 +286,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Best Time to Buy & Sell Stock (mua bán cổ phiếu 1 lần)",
+    lc: "121", slug: "best-time-to-buy-and-sell-stock", tags: "array one-pass greedy",
     examples: [{"input":"prices = [7,1,5,3,6,4]","output":"5","note":"Mua ngày 1 giá 1, bán ngày 4 giá 6. Chỉ cần theo dõi giá THẤP NHẤT đã gặp và lãi lớn nhất — một lượt duyệt."},{"input":"prices = [7,6,4,3,1]","output":"0","note":"Giá chỉ giảm nên không giao dịch, lãi 0. Đề không cho phép bán khống nên đáp án không bao giờ âm."}],
     diff: "Dễ",
     trap: "Phải MUA trước rồi mới BÁN — không được lấy max trừ min một cách vô tư nếu max đứng trước min. Không có giao dịch có lãi thì trả về 0.",
@@ -306,6 +311,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Move Zeroes (dồn số 0 về cuối, giữ thứ tự)",
+    lc: "283", slug: "move-zeroes", tags: "array two-pointers in-place",
     examples: [{"input":"nums = [0,1,0,3,12]","output":"[1,3,12,0,0]","note":"Con trỏ chậm ghi các số khác 0 lần lượt về đầu, phần đuôi còn lại điền 0. Thứ tự tương đối của số khác 0 được giữ nguyên."},{"input":"nums = [0, 0, 1]","output":"[1, 0, 0]","note":"Chỉ một phần tử khác 0 nằm cuối. Nếu dùng cách hoán đổi (swap) thì bài này tốn ít phép ghi hơn cách điền lại đuôi."}],
     diff: "Dễ",
     trap: "Đề yêu cầu làm TẠI CHỖ và GIỮ NGUYÊN thứ tự tương đối các số khác 0 — tạo mảng mới là trượt yêu cầu.",
@@ -318,6 +324,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Product of Array Except Self (tích trừ chính nó)",
+    lc: "238", slug: "product-of-array-except-self", tags: "array prefix-suffix",
     examples: [{"input":"nums = [1,2,3,4]","output":"[24,12,8,6]","note":"Tích tiền tố trái nhân tích hậu tố phải. Không dùng phép chia — đó là ràng buộc chính của đề."},{"input":"nums = [-1,1,0,-3,3]","output":"[0,0,9,0,0]","note":"Có số 0 trong mảng: nếu dùng phép chia sẽ chia cho 0 và hỏng. Đây chính là ca test mà đề đặt ra để cấm dùng chia."}],
     diff: "Trung bình",
     trap: "Đề CẤM dùng phép chia — không phải để làm khó, mà vì mảng có số 0 sẽ chia cho 0. Mảng kết quả không tính vào bộ nhớ phụ, nên vẫn đạt O(1) bộ nhớ.",
@@ -347,6 +354,7 @@ window.ALGO_DATA = [
   items: [
    {
     name: "Reverse Linked List (đảo ngược danh sách liên kết)",
+    lc: "206", slug: "reverse-linked-list", tags: "linked-list pointers",
     examples: [{"input":"head = 1→2→3→4→5","output":"5→4→3→2→1","note":"Ba biến prev, cur, next: lưu next TRƯỚC khi đổi cur.next, nếu không sẽ mất phần đuôi."},{"input":"head = null","output":"null","note":"Danh sách rỗng phải trả null chứ không được ném lỗi. Ca biên bắt buộc kiểm tra ở mọi bài linked list."}],
     diff: "Dễ",
     trap: "Phải lưu con trỏ next TRƯỚC khi đổi hướng cur.next, nếu không sẽ mất phần đuôi danh sách. Cuối vòng lặp trả về prev chứ không phải cur (lúc đó cur đã là null).",
@@ -371,6 +379,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Merge Two Sorted Lists (trộn 2 danh sách đã sắp xếp)",
+    lc: "21", slug: "merge-two-sorted-lists", tags: "linked-list merge",
     examples: [{"input":"l1 = 1→2→4, l2 = 1→3→4","output":"1→1→2→3→4→4","note":"Dùng nút giả (dummy) để không phải viết riêng logic cho phần tử đầu — mẹo áp dụng cho hầu hết bài linked list."},{"input":"l1 = null, l2 = 0","output":"0","note":"Một danh sách rỗng thì nối thẳng phần còn lại. Vòng lặp kết thúc ngay và bước 'nối phần dư' xử lý ca này."}],
     diff: "Dễ",
     trap: "Đừng quên nối phần đuôi còn lại sau vòng lặp. Dùng dummy node để không phải viết nhánh riêng cho nút đầu.",
@@ -395,6 +404,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Validate BST (kiểm tra cây tìm kiếm nhị phân)",
+    lc: "98", slug: "validate-binary-search-tree", tags: "tree dfs bst inorder",
     examples: [{"input":"root = [2,1,3]","output":"true","note":"Mọi nút nằm trong khoảng (min, max) truyền xuống: nút 1 phải < 2, nút 3 phải > 2."},{"input":"root = [5,1,4,null,null,3,6]","output":"false","note":"Nút 3 lớn hơn cha nó là 4 nhưng vẫn NHỎ hơn gốc 5 — chỉ so với cha là không đủ. Đây là ca kinh điển bắt lỗi lời giải sai."}],
     diff: "Trung bình",
     trap: "So sánh nút với hai con trực tiếp là SAI — phải truyền khoảng (min, max) xuống. Dùng Long thay Integer để tránh hỏng khi cây có nút mang giá trị Integer.MIN_VALUE.",
@@ -412,6 +422,7 @@ window.ALGO_DATA = [
   items: [
    {
     name: "Permutations (liệt kê mọi hoán vị)",
+    lc: "46", slug: "permutations", tags: "backtracking permutation",
     examples: [{"input":"nums = [1,2,3]","output":"[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]","note":"6 = 3! kết quả. Dùng mảng used[] đánh dấu phần tử đã chọn rồi bỏ dấu khi quay lui."},{"input":"nums = [1]","output":"[[1]]","note":"Một phần tử cho đúng một hoán vị. Nhớ thêm BẢN SAO của danh sách vào kết quả (new ArrayList<>(path)) — quên là mọi kết quả rỗng hết."}],
     diff: "Trung bình",
     trap: "Nhớ remove phần tử cuối khi quay lui, nếu không danh sách tạm sẽ tích lũy sai. Khi thêm kết quả phải new ArrayList<>(path) — thêm thẳng path sẽ lưu tham chiếu và cuối cùng tất cả đều rỗng.",
@@ -424,6 +435,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Subsets (liệt kê mọi tập con — power set)",
+    lc: "78", slug: "subsets", tags: "backtracking bitmask",
     examples: [{"input":"nums = [1,2,3]","output":"[[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]","note":"2³ = 8 tập con. Mỗi phần tử có đúng hai lựa chọn: lấy hoặc không lấy."},{"input":"nums = []","output":"[[]]","note":"Mảng rỗng vẫn có MỘT tập con là tập rỗng — không phải kết quả rỗng. Ca biên nhỏ nhưng test hay có."}],
     diff: "Trung bình",
     trap: "Có 2^n tập con nên n > 20 là bất khả thi — nếu đề cho n lớn thì chắc chắn phải tìm hướng khác (DP, greedy), không phải liệt kê.",
@@ -465,6 +477,7 @@ window.ALGO_DATA = [
    },
    {
     name: "Merge Intervals (gộp khoảng — lịch họp/đặt phòng)",
+    lc: "56", slug: "merge-intervals", tags: "interval sorting",
     examples: [{"input":"intervals = [[1,3],[2,6],[8,10],[15,18]]","output":"[[1,6],[8,10],[15,18]]","note":"Sau khi sắp theo điểm bắt đầu, [1,3] và [2,6] chồng nhau (2 ≤ 3) nên gộp thành [1,6]."},{"input":"intervals = [[1,4],[4,5]]","output":"[[1,5]]","note":"Chạm nhau tại đúng điểm 4 vẫn tính là chồng lấn theo đề này. Nếu đề coi [1,4] và [4,5] là rời nhau thì đổi <= thành < — luôn hỏi lại người phỏng vấn về ca biên này."}],
     diff: "Trung bình",
     trap: "Bài này sắp theo điểm BẮT ĐẦU — khác hẳn Non-overlapping Intervals (sắp theo điểm kết thúc). Nhớ nhầm cặp này là hỏng cả hai bài.",
@@ -1380,7 +1393,7 @@ window.ALGO_DATA = [
     examples: [{"input":"s = \"aaabbc\"","output":"\"a3b2c1\"","note":"Đếm số lần lặp liên tiếp rồi ghi ký tự kèm số đếm. Dùng StringBuilder, nối chuỗi bằng += trong vòng lặp là O(n²)."},{"input":"s = \"abc\"","output":"\"abc\"","note":"Chuỗi nén (\"a1b1c1\") DÀI HƠN chuỗi gốc nên phải trả bản gốc — yêu cầu này có trong đề Cracking the Coding Interview và hay bị bỏ sót."}],
     lc: 443,
     slug: "string-compression",
-    diff: "Dễ",
+    diff: "Trung bình",
     tags: "string dem-tan-suat stringbuilder",
     trap: "Nối bằng result += c trong vòng lặp là O(n²) vì mỗi lần tạo String mới — luôn dùng StringBuilder. Bẫy thứ hai: số đếm từ 10 trở lên chiếm NHIỀU ký tự, nên bản LC 443 sửa tại chỗ phải ghi từng chữ số một.",
     alt: {"title":"Cách khác — nén TẠI CHỖ trên char[] (bản LC 443, O(1) bộ nhớ)","complexity":"O(n) thời gian · O(1) bộ nhớ phụ","note":"Dùng con trỏ ghi write luôn chạy sau con trỏ đọc read nên không bao giờ ghi đè dữ liệu chưa đọc. Số đếm phải tách thành từng chữ số rồi ghi lần lượt.","java":"int compressInPlace(char[] chars) {\n    int write = 0, read = 0;\n    while (read < chars.length) {\n        char cur = chars[read];\n        int count = 0;\n        while (read < chars.length && chars[read] == cur) { read++; count++; }\n\n        chars[write++] = cur;\n        if (count > 1) {\n            for (char digit : String.valueOf(count).toCharArray()) {\n                chars[write++] = digit;      // số >= 10 chiếm nhiều ô\n            }\n        }\n    }\n    return write;   // độ dài mới\n}"},
@@ -1410,7 +1423,7 @@ window.ALGO_DATA = [
     examples: [{"input":"isPrime(97)","output":"true","note":"Chỉ cần thử ước tới căn bậc hai của n (i·i <= n). Với 97 thì chỉ thử tới 9 — 5 phép chia thay vì 96."},{"input":"sàng Eratosthenes với n = 30","output":"[2,3,5,7,11,13,17,19,23,29] — 10 số","note":"Sàng cho toàn bộ số nguyên tố ≤ n trong O(n log log n), nhanh hơn hẳn kiểm tra từng số. Vòng trong bắt đầu từ i·i chứ không phải 2·i."}],
     lc: 204,
     slug: "count-primes",
-    diff: "Dễ",
+    diff: "Trung bình",
     tags: "toan-hoc sang-nguyen-to",
     trap: "Chỉ cần chia thử tới √n, không phải tới n/2 — giải thích được vì sao là điểm cộng (ước lớn luôn đi kèm ước nhỏ hơn √n). 1 KHÔNG phải số nguyên tố, 2 là số nguyên tố CHẴN duy nhất. Trong sàng, i*i tràn int khi n lớn — ép sang long hoặc để i chạy tới i <= n/i.",
     alt: {"title":"Cách khác — chia thử kiểu 6k ± 1","complexity":"O(√n) nhưng nhanh hơn khoảng 3 lần","note":"Mọi số nguyên tố lớn hơn 3 đều có dạng 6k-1 hoặc 6k+1, nên chỉ cần thử hai nhánh đó thay vì mọi số. Cách này hay dùng khi phải kiểm tra rất nhiều số riêng lẻ mà không dựng sàng.","java":"boolean isPrimeFast(int n) {\n    if (n < 2) return false;\n    if (n < 4) return true;              // 2, 3\n    if (n % 2 == 0 || n % 3 == 0) return false;\n\n    for (int i = 5; (long) i * i <= n; i += 6) {\n        if (n % i == 0 || n % (i + 2) == 0) return false;   // 6k-1 và 6k+1\n    }\n    return true;\n}"},
@@ -1438,7 +1451,7 @@ window.ALGO_DATA = [
     examples: [{"input":"reverse(123)","output":"321","note":"Lặp: result = result*10 + n%10 rồi n /= 10. Phải kiểm tra tràn TRƯỚC khi nhân nếu đề dùng int (LeetCode 7 yêu cầu trả 0 khi tràn)."},{"input":"isArmstrong(153)","output":"true","note":"1³ + 5³ + 3³ = 153. Số mũ bằng SỐ CHỮ SỐ chứ không cố định là 3 — với 9474 thì phải mũ 4."}],
     lc: 7,
     slug: "reverse-integer",
-    diff: "Dễ",
+    diff: "Trung bình",
     tags: "toan-hoc tran-so chu-so",
     trap: "Đây là bài bẫy tràn số nổi tiếng: phải kiểm tra TRƯỚC khi nhân, vì sau khi tràn thì giá trị đã sai và không phát hiện được nữa. Chú ý Math.abs(Integer.MIN_VALUE) vẫn là số âm — nên xử lý thẳng trên số âm thay vì đổi dấu.",
     alt: {"title":"Cách khác — dùng long để bắt tràn, và bộ khuôn chữ số hay dùng","complexity":"O(số chữ số)","note":"Dễ viết đúng hơn dưới áp lực phỏng vấn: tính bằng long rồi so với khoảng của int ở cuối. Kèm theo là các biến thể tổng chữ số / Armstrong dùng chung một vòng lặp.","java":"int reverseWithLong(int x) {\n    long result = 0;\n    while (x != 0) {\n        result = result * 10 + x % 10;\n        x /= 10;\n        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) return 0;\n    }\n    return (int) result;\n}\n\nint digitSum(int n) {\n    int sum = 0;\n    n = Math.abs(n);\n    while (n > 0) { sum += n % 10; n /= 10; }\n    return sum;\n}\n\n// Armstrong: 153 = 1^3 + 5^3 + 3^3\nboolean isArmstrong(int n) {\n    int digits = String.valueOf(n).length(), sum = 0, tmp = n;\n    while (tmp > 0) {\n        int d = tmp % 10;\n        sum += (int) Math.pow(d, digits);\n        tmp /= 10;\n    }\n    return sum == n;\n}"},

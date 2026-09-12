@@ -1,6 +1,8 @@
 // Liệt kê các bài CHƯA có trường "examples" (hoặc có ít hơn 2 ví dụ), nhóm theo group.
 global.window = {};
 require('../data/algo-data.js');
+require('../data/algo-interview-extra.js');
+require('../data/algo-business-math.js');
 const all = window.ALGO_DATA;
 
 let missing = 0, ok = 0;
