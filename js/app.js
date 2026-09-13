@@ -57,6 +57,7 @@ document.addEventListener("click", function (e) {
 
 var routes = {
   home: renderHome,
+  cv: renderCvStudy,
   theory: renderTheory,
   notes: renderNotes,
   quiz: renderQuiz,
@@ -180,6 +181,7 @@ function renderHome(el) {
     '<p style="margin-bottom:12px;font-size:14.5px;line-height:1.6">Gợi ý lộ trình: đọc <strong>Lý thuyết Q&amp;A</strong> theo từng chủ đề → tick <strong>Checklist</strong> những phần đã vững → làm <strong>Quiz</strong> kiểm tra → ôn <strong>Thuật toán</strong> trước ngày phỏng vấn.</p>' +
     '<div class="toolbar" style="margin-bottom:0">' +
     '<a class="btn" href="#/theory">📖 Ôn lý thuyết</a>' +
+    '<a class="btn secondary" href="#/cv">🎯 Ôn tập theo CV Java Backend</a>' +
     '<a class="btn secondary" href="#/notes">🗂️ Đọc tài liệu ảnh</a>' +
     '<a class="btn" href="#/quiz" style="background:var(--green)">📝 Làm quiz ngay</a>' +
     (wrongBank.length ? '<button class="btn" id="home-wrong" style="background:var(--red)">🔁 Ôn ' + wrongBank.length + ' câu từng sai</button>' : "") +
