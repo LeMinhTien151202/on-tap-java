@@ -1,6 +1,6 @@
 // Độc lập với tiến độ của Lý thuyết/Quiz/Checklist hiện có.
-var cvStudyState = {module:"cv-story",stage:"all",query:"",kind:"all",status:"all",scope:"module",limit:30,draw:"",open:{}};
-var cvStudyProgress = {items:{},notes:{},lastModule:"cv-story"};
+var cvStudyState = {module:"project-tool-map",stage:"all",query:"",kind:"all",status:"all",scope:"module",limit:30,draw:"",open:{}};
+var cvStudyProgress = {items:{},notes:{},lastModule:"project-tool-map"};
 var cvStorageWarning = "";
 try {
   var cvStored = JSON.parse(localStorage.getItem("ontap.cvStudy.v1") || "null");
@@ -72,6 +72,7 @@ function cvModuleIntro(m) {
   return '<section class="cv-module-intro" aria-labelledby="cv-module-title"><div class="cv-kicker">'+esc(CV_STUDY.stages.find(function(s){return s.id === m.stage;}).title)+'</div>'+
     '<h2 id="cv-module-title" tabindex="-1">'+esc(m.title)+'</h2><p class="cv-goal">'+esc(m.goal)+'</p>'+
     '<dl class="cv-context"><div><dt>Trong CV</dt><dd>'+esc(m.cv)+'</dd></div><div><dt>Phạm vi & bằng chứng</dt><dd>'+esc(m.scope)+'</dd></div></dl>'+
+    (m.tools?'<section class="cv-tech-map"><h3>Công cụ trong dự án · lý thuyết và cách áp dụng</h3><p class="cv-tech-hint">Mở từng công cụ theo thứ tự. “Bản chất” trả lời nó là gì; “Áp dụng” chỉ đúng vị trí trong dự án; “Luồng” nối nó với công cụ trước và sau.</p><div class="cv-tech-list">'+m.tools.map(function(t,i){return '<details class="cv-tech-card"'+(i===0?' open':'')+'><summary><span><strong>'+esc(t.name)+'</strong><small>'+esc(t.type)+(t.version?' · '+esc(t.version):'')+'</small></span><span class="cv-tech-toggle">Chi tiết</span></summary><dl><div><dt>1. Bản chất lý thuyết</dt><dd>'+esc(t.theory)+'</dd></div><div><dt>2. Áp dụng trong dự án</dt><dd>'+esc(t.applies)+'</dd></div><div><dt>3. Luồng sử dụng</dt><dd>'+esc(t.flow)+'</dd></div><div><dt>4. Vì sao dùng</dt><dd>'+esc(t.why)+'</dd></div><div class="cv-tech-boundary"><dt>5. Giới hạn / dễ nói nhầm</dt><dd>'+esc(t.boundary)+'</dd></div>'+(t.evidence?'<div><dt>6. Nơi đối chiếu</dt><dd><code>'+esc(t.evidence)+'</code></dd></div>':'')+'</dl></details>';}).join("")+'</div></section>':"")+
     '<h3>Luồng cần hiểu</h3><ol class="cv-flow">'+m.flow.map(function(step){return "<li>"+esc(step)+"</li>";}).join("")+'</ol>'+
     (m.serviceMap?'<details class="cv-source"><summary>Bản đồ trách nhiệm 9 service</summary><div class="cv-table-scroll" tabindex="0" aria-label="Bảng service có thể cuộn ngang"><table><thead><tr><th>Service</th><th>Sở hữu / làm gì</th><th>Ranh giới cần nhớ</th></tr></thead><tbody>'+m.serviceMap.map(function(s){return '<tr>'+s.map(function(c){return '<td>'+esc(c)+'</td>';}).join("")+'</tr>';}).join("")+'</tbody></table></div></details>':"")+
     (m.evidence&&m.evidence.length?'<details class="cv-source"><summary>Đường dẫn source đã đối chiếu</summary><p>Snapshot đọc ngày '+esc(CV_STUDY.reviewedAt)+'. Đây là bằng chứng đọc source, không phải kết quả chạy lại backend.</p><ul>'+m.evidence.map(function(p){return '<li><code>'+esc(p)+'</code></li>';}).join("")+'</ul></details>':"")+
@@ -139,14 +140,14 @@ function renderCvStudy(el) {
       cvStudyState.module=requested.id;cvStudyState.query="";cvStudyState.kind="all";cvStudyState.status="all";cvStudyState.scope="module";cvStudyState.draw="";cvStudyState.limit=30;
     }
     if (cvStudyState.stage!=="all"&&cvStudyState.stage!==requested.stage) cvStudyState.stage="all";
-  } else if (cvModuleById(cvStudyProgress.lastModule)) cvStudyState.module=cvStudyProgress.lastModule;
+  } else cvStudyState.module=CV_STUDY.modules[0].id;
   if (!cvModuleById(cvStudyState.module)) cvStudyState.module=CV_STUDY.modules[0].id;
   cvStudyProgress.lastModule=cvStudyState.module;cvSaveProgress();
   el.innerHTML='<div id="cv-root" class="cv-study"><header class="cv-header"><div class="cv-kicker">Lê Minh Tiến · Backend Developer</div><h1>Ôn tập theo CV</h1>'+
     '<p>Hiểu bản chất → biết áp dụng → xử lý tình huống → tự trình bày bằng trải nghiệm thật.</p><p id="cv-stats" class="cv-stats" role="status"></p>'+
     '<progress id="cv-total-progress" aria-label="Số câu tự đánh dấu đã nắm"></progress><p id="cv-storage-warning" role="status" class="cv-warning"></p></header>'+
     '<details class="cv-guide"><summary>Cách học & cách hiểu mức độ kiểm chứng nội dung</summary>'+
-    '<div><p><strong>Lộ trình gợi ý 30 ngày:</strong> theo 6 chặng trong mục lục; có thể học chậm hơn. Mỗi buổi chọn một chủ đề, tự nói trước khi mở giải thích, thử bài tập rồi mới đánh dấu đã nắm. Chương “Bổ trợ” giúp bảo vệ các kỹ năng frontend/database khác vẫn ghi trong CV.</p>'+
+    '<div><p><strong>Lộ trình gợi ý 30 ngày:</strong> bắt đầu bằng chặng công nghệ rồi theo 6 chặng kiến thức trong mục lục; có thể học chậm hơn. Mỗi buổi chọn một chủ đề, tự nói trước khi mở giải thích, thử bài tập rồi mới đánh dấu đã nắm. Chương “Bổ trợ” giúp bảo vệ các kỹ năng frontend/database khác vẫn ghi trong CV.</p>'+
     '<p><strong>Đọc kỹ phạm vi từng chương:</strong> phần ZAMIGA dựa mô tả CV và ví dụ học tập; hai dự án có đối chiếu source được nêu đường dẫn. Có source không đồng nghĩa đã chạy test/deploy trong lượt này. Câu trả lời mẫu không phải thành tích để nhận là của mình.</p>'+
     '<p><strong>Hai điểm quan trọng:</strong> CV ghi PayFlow 7 service nhưng topology full hiện tại có 9 deployable Java; PayFlow là sandbox chưa có payout ngân hàng thật. Worker nộp bài Exam dùng durable DB job, không phải Kafka/Saga.</p>'+
     '<p>Toàn bộ ví dụ là minh họa hoặc bài lab. Không chạy lệnh sửa/xóa dữ liệu thật khi đang tự luyện. Tiến độ và ghi chú lưu local trên trình duyệt; không đồng bộ lên máy khác. Không lưu secret hay thông tin công ty nhạy cảm ở đây.</p></div></details>'+
@@ -155,7 +156,7 @@ function renderCvStudy(el) {
     '<label>Loại nội dung<select id="cv-kind"><option value="all">Tất cả loại câu</option><option value="theory">Lý thuyết</option><option value="application">Áp dụng</option><option value="scenario">Tình huống</option><option value="interview">Phỏng vấn</option></select></label>'+
     '<label>Tiến độ tự đánh giá<select id="cv-status"><option value="all">Tất cả tiến độ</option><option value="unread">Chưa nắm vững</option><option value="review">Cần ôn lại</option><option value="known">Đã nắm</option></select></label></div>'+
     '<p>Gõ từ khóa sẽ tìm trên tất cả chủ đề trong chặng đang chọn; hỗ trợ tiếng Việt không dấu.</p></section>'+
-    '<div class="cv-layout"><aside class="cv-outline"><details id="cv-outline-panel"'+(window.matchMedia("(min-width: 1101px)").matches?" open":"")+'><summary>Mục lục học <span>40 chủ đề / 6 chặng</span></summary><label for="cv-stage">Chọn chặng</label><select id="cv-stage"><option value="all">Toàn bộ 6 chặng</option>'+CV_STUDY.stages.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title)+'</option>';}).join("")+'</select><nav id="cv-module-nav" aria-label="Chủ đề ôn tập theo CV"></nav></details></aside><div id="cv-reader" class="cv-reader"></div></div></div>';
+    '<div class="cv-layout"><aside class="cv-outline"><details id="cv-outline-panel"'+(window.matchMedia("(min-width: 1101px)").matches?" open":"")+'><summary>Mục lục học <span>'+CV_STUDY.modules.length+' chủ đề / '+CV_STUDY.stages.length+' chặng</span></summary><label for="cv-stage">Chọn chặng</label><select id="cv-stage"><option value="all">Toàn bộ '+CV_STUDY.stages.length+' chặng</option>'+CV_STUDY.stages.map(function(s){return '<option value="'+esc(s.id)+'">'+esc(s.title)+'</option>';}).join("")+'</select><nav id="cv-module-nav" aria-label="Chủ đề ôn tập theo CV"></nav></details></aside><div id="cv-reader" class="cv-reader"></div></div></div>';
   var root=el.querySelector("#cv-root");
   root.querySelector("#cv-kind").value=cvStudyState.kind;root.querySelector("#cv-status").value=cvStudyState.status;root.querySelector("#cv-scope").value=cvStudyState.scope;root.querySelector("#cv-stage").value=cvStudyState.stage;
   cvRefresh(root);

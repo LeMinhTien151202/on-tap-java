@@ -1,5 +1,5 @@
 cvM({
- id:"websocket-chat",stage:"work",title:"Spring WebSocket + STOMP · chat 1–1 / nhóm",priority:"core",
+ id:"websocket-chat",stage:"work",title:"Spring WebSocket + STOMP · chat 1-1 / nhóm",priority:"core",
  cv:"Real-time messaging với Spring WebSocket và STOMP tại ZAMIGA.",
  scope:"Mô hình luyện giải thích dựa CV; chưa xác minh broker/topology của hệ thống công ty.",
  goal:"Biết từ kết nối tới lưu lịch sử, quyền subscribe và xử lý mất mạng.",

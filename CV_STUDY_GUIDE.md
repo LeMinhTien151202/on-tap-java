@@ -4,16 +4,17 @@ Mở index.html, chọn **Ôn tập theo CV** trong menu hoặc nút ở Trang c
 
 ## Nội dung
 
-40 chủ đề, 211 câu có lời giải: 56 câu lý thuyết, 47 câu áp dụng, 93 câu tình huống và 15 câu phỏng vấn. Mỗi câu có giải thích, ví dụ, điểm dễ nhầm và bài tự kiểm tra; mỗi chương có mục tiêu, liên hệ CV và luồng xử lý.
+45 chủ đề, 236 câu có lời giải: 60 câu lý thuyết, 48 câu áp dụng, 105 câu tình huống và 23 câu phỏng vấn. Năm chủ đề đầu là bản đồ công cụ: tổng quan, PayFlow, Exam backend, Exam frontend/triển khai và ZAMIGA. Mỗi công cụ nêu bản chất lý thuyết, vị trí áp dụng, luồng sử dụng, lý do chọn, giới hạn dễ nói nhầm và nơi đối chiếu; sau đó mới đến câu hỏi kiến thức/tình huống.
 
-Sáu chặng học:
+Bảy chặng học:
 
-1. Java Core, Collections, Java 21/concurrency, Spring, transaction và REST.
-2. SQL/PostgreSQL, JPA/Hibernate, Flyway, SQL Server/MongoDB, Redis, JWT, Keycloak và bảo mật.
-3. Elasticsearch/reindex, MinIO/R2, WebSocket/STOMP, Firebase và kinh nghiệm ZAMIGA/AI-assisted engineering.
-4. PayFlow: bản đồ service, Saga, idempotency, Kafka, Outbox/Inbox, Account/Ledger/Refund, settlement/reconciliation/reporting/webhook. Exam: làm bài, durable submission job, chấm AI và STT.
-5. JUnit/Mockito, Testcontainers/Postman, logging/audit/metrics, Docker, Nginx, CI/CD, Google Cloud và recovery.
-6. JavaScript/TypeScript, React/TanStack Query, Angular/Ant Design/Tailwind và 5 vòng phỏng vấn thử.
+1. Công nghệ trong dự án: phân loại công cụ và học lý thuyết gắn trực tiếp với PayFlow, Exam và ZAMIGA.
+2. Java Core, Collections, Java 21/concurrency, Spring, transaction và REST.
+3. SQL/PostgreSQL, JPA/Hibernate, Flyway, SQL Server/MongoDB, Redis, JWT, Keycloak và bảo mật.
+4. Elasticsearch/reindex, MinIO/R2, WebSocket/STOMP, Firebase và kinh nghiệm ZAMIGA/AI-assisted engineering.
+5. PayFlow: bản đồ service, Saga, idempotency, Kafka, Outbox/Inbox, Account/Ledger/Refund, settlement/reconciliation/reporting/webhook. Exam: làm bài, durable submission job, chấm AI và STT.
+6. JUnit/Mockito, Testcontainers/Postman, logging/audit/metrics, Docker, Nginx, CI/CD, Google Cloud và recovery.
+7. JavaScript/TypeScript, React/TanStack Query, Angular/Ant Design/Tailwind và 5 vòng phỏng vấn thử.
 
 ## Cách học
 
@@ -26,7 +27,7 @@ Sáu chặng học:
 
 ## Ranh giới nguồn và bằng chứng
 
-Nguồn CV: C:/Users/Admin/Downloads/LE_MINH_TIEN_BackendDeveloper.pdf, đã đọc ở lượt trước. Snapshot đối chiếu source ngày 2026-09-13; tích hợp/kiểm thử giao diện ngày 2026-09-14.
+Nguồn CV: C:/Users/Admin/Downloads/LE_MINH_TIEN_BackendDeveloper.pdf, đã đọc ở lượt trước. Snapshot đối chiếu source và tích hợp/kiểm thử giao diện ngày 2026-09-14.
 
 - PayFlow: D:/payflow-payment-platform. CV ghi 7 service; topology full hiện tại có 9 Java deployable gồm Gateway. Cần xác nhận lại phiên bản ghi trong CV. Sandbox, chưa có tiền/payout ngân hàng thật.
 - Exam backend: D:/be-exam-online/java-exam-online; frontend: D:/react-exam-online. Worker nộp bài dựa DB job/executor, không phải Kafka/Saga. Pipeline và deploy script có trong source; không coi việc đọc code là bằng chứng production đã chạy thành công.
@@ -36,7 +37,7 @@ Nguồn CV: C:/Users/Admin/Downloads/LE_MINH_TIEN_BackendDeveloper.pdf, đã đ�
 
 ## Bảo trì và kiểm thử
 
-Dữ liệu: 12 file data/cv-study-*.js, được nạp theo thứ tự trong index.html. cv-study-data.js khai báo schema/helper; các file sau đăng ký chương bằng cvM, câu hỏi bằng cvQ. Giữ ID ổn định khi sửa nội dung để bảo toàn tiến độ.
+Dữ liệu: 13 file data/cv-study-*.js, được nạp theo thứ tự trong index.html. cv-study-data.js khai báo schema/helper; cv-study-tools.js là chặng công nghệ mở đầu; các file sau đăng ký chương bằng cvM, câu hỏi bằng cvQ. Giữ ID ổn định khi sửa nội dung để bảo toàn tiến độ.
 
 Giao diện: js/cv-study.js, css/cv-study.css. Local storage key: ontap.cvStudy.v1. Không thay các key Lý thuyết/Quiz/Checklist cũ.
 

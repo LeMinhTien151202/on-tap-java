@@ -33,11 +33,13 @@ async function main(){
     page.setDefaultTimeout(12000);
     await page.goto(base+"/index.html#/cv");
     await page.locator("#cv-root").waitFor();
-    assert.equal(await page.locator("#cv-module-nav a").count(),40);
+    assert.equal(await page.locator("#cv-module-nav a").count(),45);
     const count=await page.evaluate(()=>cvAllItems().length);
     assert(count>=200);
     assert((await page.locator("#cv-stats").textContent()).includes(count+" câu"));
     assert.equal(await page.locator(".cv-question-card").count(),5);
+    assert.equal(await page.locator(".cv-tech-card").count(),9);
+    assert(await page.locator(".cv-tech-card").first().evaluate(e=>e.open));
     await page.locator(".cv-question summary").first().click();
     assert(await page.locator(".cv-question").first().evaluate(e=>e.open));
     await page.locator('[data-cv-mark="known"]').first().click();
@@ -80,11 +82,12 @@ async function main(){
     await page.locator('[data-cv-action="collapse"]').click();
     for(const isOpen of await page.locator(".cv-question").evaluateAll(ds=>ds.map(d=>d.open)))assert(!isOpen);
     // Every chapter renders with its expected number of questions and escaped content.
-    const modules=await page.evaluate(()=>CV_STUDY.modules.map(m=>({id:m.id,count:m.items.length})));
+    const modules=await page.evaluate(()=>CV_STUDY.modules.map(m=>({id:m.id,count:m.items.length,tools:m.tools?.length||0})));
     for(const m of modules){
       await page.goto(base+"/index.html#/cv?module="+m.id);
       await page.waitForFunction(id=>cvStudyState.module===id,m.id);
       assert.equal(await page.locator(".cv-question-card").count(),m.count,m.id);
+      assert.equal(await page.locator(".cv-tech-card").count(),m.tools,m.id+" tool cards");
     }
     console.log("PASS: all chapters, filters, search, practice, persistence and navigation");
     // Viewports, both themes, open long content and source paths.

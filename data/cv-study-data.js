@@ -3,18 +3,22 @@ var CV_STUDY = {
   version: 1, reviewedAt: "2026-09-13", title: "Ôn tập theo CV · Java Backend",
   source: "LE_MINH_TIEN_BackendDeveloper.pdf",
   stages: [
-    {id:"foundation",title:"1. Nền tảng Java / Spring",days:"Ngày 1–5"},
-    {id:"data-security",title:"2. Dữ liệu & bảo mật",days:"Ngày 6–11"},
-    {id:"work",title:"3. Kinh nghiệm ZAMIGA",days:"Ngày 12–16"},
-    {id:"projects",title:"4. PayFlow & Exam Online",days:"Ngày 17–23"},
-    {id:"delivery",title:"5. Kiểm thử & triển khai",days:"Ngày 24–28"},
-    {id:"interview",title:"6. Frontend & phỏng vấn thử",days:"Ngày 29–30"}
+    {id:"tooling",title:"1. Công nghệ dùng trong dự án",days:"Học trước lý thuyết"},
+    {id:"foundation",title:"2. Nền tảng Java / Spring",days:"Ngày 1-5"},
+    {id:"data-security",title:"3. Dữ liệu & bảo mật",days:"Ngày 6-11"},
+    {id:"work",title:"4. Kinh nghiệm ZAMIGA",days:"Ngày 12-16"},
+    {id:"projects",title:"5. PayFlow & Exam Online",days:"Ngày 17-23"},
+    {id:"delivery",title:"6. Kiểm thử & triển khai",days:"Ngày 24-28"},
+    {id:"interview",title:"7. Frontend & phỏng vấn thử",days:"Ngày 29-30"}
   ], modules:[]
 };
 function cvQ(id,kind,q,answer,example,pitfall,exercise,code) {
   return {id:id,kind:kind,q:q,answer:answer,example:example||"",pitfall:pitfall||"",exercise:exercise||"",code:code||""};
 }
 function cvM(module) { CV_STUDY.modules.push(module); }
+function cvTool(name,type,version,theory,applies,flow,why,boundary,evidence) {
+  return {name:name,type:type,version:version||"",theory:theory,applies:applies,flow:flow,why:why,boundary:boundary,evidence:evidence||""};
+}
 
 cvM({
  id:"cv-story",stage:"foundation",title:"Đọc CV thành bản đồ năng lực",priority:"core",
@@ -23,7 +27,7 @@ cvM({
  goal:"Kể được mình làm gì, vì sao chọn Java và chịu trách nhiệm đến đâu mà không đọc tên công nghệ liên tiếp.",
  flow:["Giới thiệu định hướng","Chọn 2 chức năng bạn hiểu sâu","Giải thích quyết định kỹ thuật","Nêu lỗi và bằng chứng kiểm tra","Thừa nhận giới hạn"],
  items:[
-  cvQ("story-intro","interview","Giới thiệu bản thân trong 60–90 giây theo CV mới?","Đi theo hiện tại → kinh nghiệm liên quan → dự án tiêu biểu → vị trí mong muốn. Mở đầu là Java Backend Developer, sau đó nói kinh nghiệm xây REST API và tích hợp hệ thống ở ZAMIGA. Chọn PayFlow để nói về tính đúng đắn khi lỗi, Exam để nói về chức năng thực tế và triển khai. Không cần đọc lại toàn bộ học vấn hay tất cả thư viện.","Khung: Em tập trung Java/Spring Boot; có nền tảng fullstack giúp phối hợp API với frontend. Em muốn đào sâu backend, dữ liệu và độ tin cậy của luồng xử lý.","Không nhận là người thiết kế toàn bộ hệ thống công ty nếu chỉ phụ trách một module.","Thu âm 90 giây; đánh dấu mỗi khẳng định bạn có thể chỉ ra code, test hoặc công việc thật."),
+  cvQ("story-intro","interview","Giới thiệu bản thân trong 60-90 giây theo CV mới?","Đi theo hiện tại → kinh nghiệm liên quan → dự án tiêu biểu → vị trí mong muốn. Mở đầu là Java Backend Developer, sau đó nói kinh nghiệm xây REST API và tích hợp hệ thống ở ZAMIGA. Chọn PayFlow để nói về tính đúng đắn khi lỗi, Exam để nói về chức năng thực tế và triển khai. Không cần đọc lại toàn bộ học vấn hay tất cả thư viện.","Khung: Em tập trung Java/Spring Boot; có nền tảng fullstack giúp phối hợp API với frontend. Em muốn đào sâu backend, dữ liệu và độ tin cậy của luồng xử lý.","Không nhận là người thiết kế toàn bộ hệ thống công ty nếu chỉ phụ trách một module.","Thu âm 90 giây; đánh dấu mỗi khẳng định bạn có thể chỉ ra code, test hoặc công việc thật."),
   cvQ("story-ownership","interview","Nhà tuyển dụng hỏi: phần nào em tự làm, phần nào dùng AI hoặc làm cùng nhóm?","Tách yêu cầu, thiết kế, triển khai, review, test và vận hành. Nêu rõ bạn chịu trách nhiệm phần nào và AI hỗ trợ ở bước nào. Việc dùng AI không thay cho khả năng giải thích code, xử lý lỗi và xác minh bằng test. Nếu chỉ tham gia tích hợp, nói đúng là tích hợp, không đổi thành xây toàn bộ nền tảng.","Chọn một chức năng: API tìm kiếm. Nêu input/output, query, quyền truy cập, test và lỗi đã sửa; chỉ nhận các bước mình thực sự làm.","Không bịa tỷ lệ đóng góp, số người dùng, latency hay phần trăm cải thiện.","Viết 3 câu chuyện theo STAR: bối cảnh, nhiệm vụ, hành động cá nhân, kết quả có chứng cứ."),
   cvQ("story-java","theory","Tại sao chuyển từ hướng Node.js/fullstack sang Java backend?","Nói về hướng phát triển và bài toán phù hợp: tổ chức domain, transaction, type system, hệ sinh thái Spring, kiểm thử và vận hành. Java và Node.js đều xây backend được; lựa chọn phụ thuộc đội ngũ và workload. Kinh nghiệm frontend giúp hiểu contract, lỗi mạng và trải nghiệm chờ bất đồng bộ, không mâu thuẫn với định hướng backend.","Nối vào Exam: tách chấm bài dài khỏi HTTP request; PayFlow: bảo vệ invariant và local transaction.","Không nói Java tự động bảo mật, nhanh hơn mọi trường hợp hoặc Node.js không xử lý được đồng thời.","Giải thích sự khác nhau giữa I/O-bound và CPU-bound bằng 2 chức năng trong CV."),
   cvQ("story-evidence","scenario","CV và source khác số service hoặc thời gian phát triển thì trả lời sao?","Khóa một mốc commit/demo trước buổi phỏng vấn. CV ghi PayFlow 7 service; README và topology full hiện tại liệt kê 9 deployable Java gồm Gateway và 8 business services. Đây là chênh lệch cần bạn xác nhận theo phiên bản, không được tự suy ra CV đã đúng. Các mốc nâng cấp source sau thời gian ghi trong CV cũng nên được giải thích là bảo trì/phát triển tiếp nếu đúng thực tế.","Chuẩn bị sơ đồ đúng bản demo; nói rõ project sandbox, chưa tích hợp ngân hàng/PSP và payout thật.","Không tính PostgreSQL, Kafka, Redis, Keycloak hoặc shared library thành Java service để khớp con số.","Ghi mốc commit, chức năng đã chạy, chức năng chỉ mới có code; tự cập nhật CV trước khi gửi."),

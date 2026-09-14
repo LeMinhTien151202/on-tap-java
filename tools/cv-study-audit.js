@@ -12,9 +12,9 @@ for (const file of dataFiles) vm.runInContext(fs.readFileSync(path.join(root, fi
 new vm.Script(fs.readFileSync(path.join(root,"js/cv-study.js"),"utf8"), {filename:"js/cv-study.js"});
 new vm.Script(fs.readFileSync(path.join(root,"js/app.js"),"utf8"), {filename:"js/app.js"});
 const data = context.CV_STUDY;
-assert.equal(dataFiles.length, 12);
-assert.equal(data.stages.length, 6);
-assert.equal(data.modules.length, 40);
+assert.equal(dataFiles.length, 13);
+assert.equal(data.stages.length, 7);
+assert.equal(data.modules.length, 45);
 const ids = new Set(), moduleIds = new Set(), questions = new Set(), counts = {};
 const stageIds = new Set(data.stages.map(s=>s.id));
 let words = 0;
@@ -25,6 +25,13 @@ for (const m of data.modules) {
   assert(["core","support"].includes(m.priority));
   for (const field of ["title","cv","scope","goal"]) assert(m[field]?.trim(), m.id+" missing "+field);
   assert(m.flow.length>=3 && m.items.length>=5);
+  if (m.stage === "tooling") {
+    assert(Array.isArray(m.tools) && m.tools.length>=8, m.id+" missing technology map");
+    for (const tool of m.tools) {
+      for (const field of ["name","type","version","theory","applies","flow","why","boundary","evidence"])
+        assert(tool[field]?.trim(), m.id+" tool missing "+field);
+    }
+  }
   for(const q of m.items) {
     assert(!ids.has(q.id), "Duplicate question id: "+q.id);
     ids.add(q.id);
@@ -43,6 +50,7 @@ for (const m of data.modules) {
     assert(r.title);
   }
 }
+assert.equal(data.modules.slice(0,5).map(m=>m.stage).join(","),Array(5).fill("tooling").join(","));
 const flattened=JSON.stringify(data).toLowerCase();
 const required=["java","spring boot","rest","jwt","sql server","postgresql","mongodb","kafka","redis",
  "keycloak","elasticsearch","minio","websocket","stomp","firebase","gemini","whisper","groq","cloudflare r2",
