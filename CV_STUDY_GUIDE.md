@@ -4,7 +4,7 @@ Mở index.html, chọn **Ôn tập theo CV** trong menu hoặc nút ở Trang c
 
 ## Nội dung
 
-45 chủ đề, 236 câu có lời giải: 60 câu lý thuyết, 48 câu áp dụng, 105 câu tình huống và 23 câu phỏng vấn. Năm chủ đề đầu là bản đồ công cụ: tổng quan, PayFlow, Exam backend, Exam frontend/triển khai và ZAMIGA. Mỗi công cụ nêu bản chất lý thuyết, vị trí áp dụng, luồng sử dụng, lý do chọn, giới hạn dễ nói nhầm và nơi đối chiếu; sau đó mới đến câu hỏi kiến thức/tình huống.
+46 chủ đề, 252 câu có lời giải: 65 câu lý thuyết, 54 câu áp dụng, 109 câu tình huống và 24 câu phỏng vấn. Năm chủ đề đầu là bản đồ công cụ: tổng quan, PayFlow, Exam backend, Exam frontend/triển khai và ZAMIGA. Mỗi công cụ nêu bản chất lý thuyết, vị trí áp dụng, luồng sử dụng, lý do chọn, giới hạn dễ nói nhầm và nơi đối chiếu; sau đó mới đến câu hỏi kiến thức/tình huống.
 
 Bảy chặng học:
 
@@ -13,7 +13,7 @@ Bảy chặng học:
 3. SQL/PostgreSQL, JPA/Hibernate, Flyway, SQL Server/MongoDB, Redis, JWT, Keycloak và bảo mật.
 4. Elasticsearch/reindex, MinIO/R2, WebSocket/STOMP, Firebase và kinh nghiệm ZAMIGA/AI-assisted engineering.
 5. PayFlow: bản đồ service, Saga, idempotency, Kafka, Outbox/Inbox, Account/Ledger/Refund, settlement/reconciliation/reporting/webhook. Exam: làm bài, durable submission job, chấm AI và STT.
-6. JUnit/Mockito, Testcontainers/Postman, logging/audit/metrics, Docker, Nginx, CI/CD, Google Cloud và recovery.
+6. Java Exam Online testing từ khái niệm dependency đến unit/API/security/PostgreSQL/CI; JUnit/Mockito, Testcontainers/Postman, logging/audit/metrics, Docker, Nginx, CI/CD, Google Cloud và recovery.
 7. JavaScript/TypeScript, React/TanStack Query, Angular/Ant Design/Tailwind và 5 vòng phỏng vấn thử.
 
 ## Cách học

@@ -33,7 +33,7 @@ async function main(){
     page.setDefaultTimeout(12000);
     await page.goto(base+"/index.html#/cv");
     await page.locator("#cv-root").waitFor();
-    assert.equal(await page.locator("#cv-module-nav a").count(),45);
+    assert.equal(await page.locator("#cv-module-nav a").count(),46);
     const count=await page.evaluate(()=>cvAllItems().length);
     assert(count>=200);
     assert((await page.locator("#cv-stats").textContent()).includes(count+" câu"));

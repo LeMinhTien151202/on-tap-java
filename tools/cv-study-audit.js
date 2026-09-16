@@ -14,7 +14,7 @@ new vm.Script(fs.readFileSync(path.join(root,"js/app.js"),"utf8"), {filename:"js
 const data = context.CV_STUDY;
 assert.equal(dataFiles.length, 13);
 assert.equal(data.stages.length, 7);
-assert.equal(data.modules.length, 45);
+assert.equal(data.modules.length, 46);
 const ids = new Set(), moduleIds = new Set(), questions = new Set(), counts = {};
 const stageIds = new Set(data.stages.map(s=>s.id));
 let words = 0;
